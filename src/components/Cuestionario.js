@@ -1,14 +1,11 @@
 import React from 'react';
 
-const Button = ({ answer }) => (
-    <button className="bg-white p-4
-    text-puple-800 font-semibold rounded shadow">
-        {answer}
-    </button>
-)
 
-const Cuestionario = ({ data: { question, correct_answer, incorrect_answers }, }) => {
-    const shuffledAnswer = [correct_answer, ...incorrect_answers]
+
+const Cuestionario = ({ handleAnswer, data: { question, correct_answer, incorrect_answers }, }) => {
+    const shuffledAnswers = [correct_answer, ...incorrect_answers].sort(() => Math.random() - 0.5);
+    console.log(shuffledAnswers);
+
 
     return (
         <div>
@@ -19,10 +16,16 @@ const Cuestionario = ({ data: { question, correct_answer, incorrect_answers }, }
                 />
             </div>
             <div className=" grid grid-cols-2 gap-6 mt-6 ">
-                <Button onClick={() => shuffledAnswer[0]} answer={correct_answer} />
-                <Button onClick={() => shuffledAnswer[1]} answer={incorrect_answers[0]} />
-                <Button onClick={() => shuffledAnswer[2]} answer={incorrect_answers[1]} />
-                <Button onClick={() => shuffledAnswer[3]} answer={incorrect_answers[2]} />
+                {shuffledAnswers.map(answer => (
+
+                    <button
+                        className='bg-white p-4
+                        text-puple-800 font-semibold rounded shadow'
+                        onClick={() => handleAnswer(answer)}
+                        dangerouslySetInnerHTML={{ __html: answer }}
+                    />
+
+                ))}
             </div>
         </div>
 
