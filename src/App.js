@@ -3,6 +3,8 @@ import { Cuestionario } from './components'
 
 const API_URL = 'https://opentdb.com/api.php?amount=10&category=14&difficlty=easy&type=multiple';
 
+const API_URL_COMPUTERS = 'https://opentdb.com/api.php?amount=19&category=18&difficulty=medium';
+
 function App() {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -11,14 +13,16 @@ function App() {
 
 
   useEffect(() => {
-    fetch(API_URL)
+    fetch(API_URL_COMPUTERS)
       .then((res) => res.json())
       .then((data) => {
-        setQuestions(data.results);
+        //setQuestions(data.results); problema
         const questions = data.results.map((question) =>
           ({
             ...question,
-            answers: [question.correct_answer, ...question.incorrect_answers].sort(() => Math.random() - 0.5),
+            answers: [
+              question.correct_answer, ...question.incorrect_answers,
+            ].sort(() => Math.random() - 0.5),
 
           }));
 
