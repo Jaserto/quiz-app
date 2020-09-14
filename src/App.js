@@ -7,6 +7,7 @@ function App() {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [showAnswers, setShowAnswers] = useState(false);
 
 
   useEffect(() => {
@@ -14,18 +15,34 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         setQuestions(data.results);
+        const questions = data.results.map((question) =>
+          ({
+            ...question,
+            answers: [question.correct_answer, ...question.incorrect_answers].sort(() => Math.random() - 0.5),
+
+          }));
+
+        setQuestions(questions);
       });
 
   }, []);
 
   const handleAnswer = (answer) => {
-    const newIndex = currentIndex + 1
-    setCurrentIndex(newIndex)
-
-    if (answer === questions[currentIndex].correct_answer) {
-      setScore(score + 1);
+    if (!showAnswers) {
+      if (answer === questions[currentIndex].correct_answer) {
+        setScore(score + 1);
+      }
     }
 
+    setShowAnswers(true);
+    /*   const newIndex = currentIndex + 1
+      setCurrentIndex(newIndex) */
+
+  }
+
+  const handleNextQuestion = () => {
+    setCurrentIndex(currentIndex + 1);
+    setShowAnswers(false);
   }
 
 
@@ -33,8 +50,7 @@ function App() {
     <div className="container">
       {currentIndex >= questions.length ? (
         <h1 className="text-3xl font-bold text-white">Your score was {score}</h1>) :
-        (<Cuestionario data={questions[currentIndex]} handleAnswer={handleAnswer} />
-
+        (<Cuestionario data={questions[currentIndex]} handleAnswer={handleAnswer} showAnswers={showAnswers} handleNextQuestion={handleNextQuestion} />
         )}
     </div>
   ) : (
